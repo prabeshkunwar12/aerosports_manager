@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Data {
+  id              Int     @id @default(autoincrement()) 
+  location        String? 
+  pageid          String? 
+  isactive        Boolean @default(true) 
+  desc            String? 
+  parentid        String? 
+  path            String? 
+  pagetype        String? 
+  title           String? 
+  metatitle       String? 
+  metadescription String? 
+  seosection      String? 
+  icon            String? 
+  booknowurl      String? 
+  video           String? 
+  smallimage      String? 
+  smalltext       String? 
+  headerimage     String? 
+  imageTitle      String? 
+  section1        String? 
+  sectionImage    String? 
+  section2        String? 
+  section2Image   String? 
+  Seoheader       String? 
+  ruleyes         String? 
+  ruleno          String? 
+  warnings        String? 
+  booknowlink     String? 
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model Blog {
+  id        Int     @id @default(autoincrement()) 
+  location  String?
+  title     String?
+  category  String?
+  tags      String?
+  shortdesc String?
+  format    String?
+  image     String?
+  video     String?
+  postdate  String?
+  views     Int     @default(0)
+  author    String?
+  htmldesc  String?
+}
+
+model BlogReviews {
+  id      Int     @id @default(autoincrement()) 
+  comment String
+  user    String?
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model Locations {
+  id         Int     @id @default(autoincrement()) 
+  location   String?
+  address    String?
+  phone      String?
+  map        String?
+  locationid String?
+  hours      String?
+  email      String?
+  desc       String?
+  smallimage String?
+  tag        String?
+  rollerurl  String?
+  facebook   String?
+  insta      String?
+  twitter    String?
+  tiktok     String?
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model Config {
+  id       Int     @id @default(autoincrement()) 
+  location String?
+  key      String?
+  value    String?
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model Promo {
+  id          Int      @id @default(autoincrement()) 
+  location    String?
+  promo       String?
+  img         String?
+  description String?
+  startdate   DateTime
+  enddate     DateTime
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model BirthdayPackages {
+  id        Int     @id @default(autoincrement()) 
+  location  String?
+  plantitle String?
+  category  String?
+  price     String?
+  period    String?
+  includes  String?
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+}
+
+model FAQ {
+  id       Int     @id @default(autoincrement()) 
+  location String?
+  question String?
+  answer   String?
+
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt
+}
