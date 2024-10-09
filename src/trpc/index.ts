@@ -1,43 +1,63 @@
-import * as z from 'zod'
-import { TRPCError } from '@trpc/server';
-import { db } from '@/lib/db';
-import { privateProcedure, publicProcedure, router } from './trpc';
-import { getData } from '@/lib/data/data';
+import { privateProcedure, router } from './trpc';
+import { getBirthdayPackagesData, getBlogData, getBlogReviewsData, getConfigData, getData, getFAQData, getLocationsData, getPromoData } from '@/lib/data/data';
  
 export const appRouter = router({
 
-    getData: publicProcedure.query(() =>{
-        const data = getData();
-        if(data) return data
+    // Route for getting data from the Data model
+    getData: privateProcedure.query(async () => {
+        const data = await getData();
+        if (data) return data;
+        throw new Error('Failed to fetch data');
     }),
 
-//   createTask: privateProcedure.input(NewTaskFormSchema).mutation(async ({ctx, input})=> {
-//     const { userId } = ctx
-//     const { description, subTypeName, location, taskDateTime } = input
+    // Route for getting data from the Blog model
+    getBlog: privateProcedure.query(async () => {
+        const data = await getBlogData();
+        if (data) return data;
+        throw new Error('Failed to fetch blog');
+    }),
 
-//     const typeName = await getTaskBySubTask(subTypeName)
+    // Route for getting data from the BlogReviews model
+    getBlogReviews: privateProcedure.query(async () => {
+        const data = await getBlogReviewsData();
+        if (data) return data;
+        throw new Error('Failed to fetch blog reviews');
+    }),
 
-//     if(!typeName) {
-//       return null
-//     }
+    // Route for getting data from the Locations model
+    getLocations: privateProcedure.query(async () => {
+        const data = await getLocationsData();
+        if (data) return data;
+        throw new Error('Failed to fetch locations');
+    }),
 
-//     if(new Date()>new Date(taskDateTime)) {
-//       throw new Error('Date and time submitted is before the current date')
-//     }
+    // Route for getting data from the Config model
+    getConfig: privateProcedure.query(async () => {
+        const data = await getConfigData();
+        if (data) return data;
+        throw new Error('Failed to fetch config');
+    }),
 
-//     const task = await db.task.create({
-//       data: {
-//         description,
-//         typeName,
-//         subTypeName,
-//         location,
-//         status:$Enums.TaskStatus.POSTED,
-//         consumerId:userId,
-//         taskDateTime:taskDateTime
-//       }
-//     })
-//     return task
-//   }),
+    // Route for getting data from the Promo model
+    getPromo: privateProcedure.query(async () => {
+        const data = await getPromoData();
+        if (data) return data;
+        throw new Error('Failed to fetch promo');
+    }),
+
+    // Route for getting data from the BirthdayPackages model
+    getBirthdayPackages: privateProcedure.query(async () => {
+        const data = await getBirthdayPackagesData();
+        if (data) return data;
+        throw new Error('Failed to fetch birthday packages');
+    }),
+
+    // Route for getting data from the FAQ model
+    getFAQ: privateProcedure.query(async () => {
+        const data = await getFAQData();
+        if (data) return data;
+        throw new Error('Failed to fetch FAQ');
+    }),
 
 });
 
