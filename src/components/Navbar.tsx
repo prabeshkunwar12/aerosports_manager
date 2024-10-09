@@ -17,6 +17,87 @@ const Navbar = async () => {
                         {user ? (
                             <>
                                 <Link 
+                                    href='/data' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Data
+                                </Link>
+                                <Link 
+                                    href='/blog' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Blog
+                                </Link>
+                                <Link 
+                                    href='/blog_reviews' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Blog Reviews
+                                </Link>
+                                <Link 
+                                    href='/birthday_packages' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Birthday Packages
+                                </Link>
+                                <Link 
+                                    href='/config' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Config
+                                </Link>
+                                <Link 
+                                    href='/faq' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    FAQs
+                                </Link>
+                                <Link 
+                                    href='/data' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Data
+                                </Link>
+                                <Link 
+                                    href='/locations' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Locations
+                                </Link>
+                                <Link 
+                                    href='/promo' 
+                                    className={buttonVariants({
+                                        size: 'sm',
+                                        variant: 'ghost'
+                                    })}
+                                >
+                                    Promo
+                                </Link>
+                                <Link 
                                     href='/api/auth/logout' 
                                     className={buttonVariants({
                                         size: 'sm',
