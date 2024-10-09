@@ -8,7 +8,6 @@ export const appRouter = router({
 
     getData: publicProcedure.query(() =>{
         const data = getData();
-        console.log(data);
         if(data) return data
     }),
 
