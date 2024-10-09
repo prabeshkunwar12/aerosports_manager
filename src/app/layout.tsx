@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import Providers from "@/components/providers";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,12 +14,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <Navbar />
-        {children}
-      </body>
+      <body>
+				<Navbar />
+				<main className="flex flex-col grainy-light min-h-[calc(100vh-3.5rem-1px)]">
+					<div className="flex flex-1 flex-col h-full">
+						<Providers>
+							{children}
+						</Providers>
+					</div>
+				</main>
+			</body>
     </html>
   );
 }
