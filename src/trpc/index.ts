@@ -1,14 +1,16 @@
 import * as z from 'zod'
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import { privateProcedure, router } from './trpc';
+import { privateProcedure, publicProcedure, router } from './trpc';
+import { getData } from '@/lib/data/data';
  
 export const appRouter = router({
 
-//   getConsumerTasks: privateProcedure.query(({ctx}) =>{
-//     const {userId} = ctx
-//     return getTasksByConsumerId(userId)
-//   }),
+    getData: publicProcedure.query(() =>{
+        const data = getData();
+        console.log(data);
+        if(data) return data
+    }),
 
 //   createTask: privateProcedure.input(NewTaskFormSchema).mutation(async ({ctx, input})=> {
 //     const { userId } = ctx
