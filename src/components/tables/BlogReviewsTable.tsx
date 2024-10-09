@@ -1,0 +1,62 @@
+'use client'
+
+import { trpc } from '@/app/_trpc/client'
+import { BlogReviews } from '@prisma/client'
+import { ColumnDef } from '@tanstack/react-table'
+import React from 'react'
+import { GenericTable } from './GenericTable'
+import { GenericColumnHeader } from './GenericTableHeader'
+
+interface BlogReviewsWithStrings extends Omit<BlogReviews, "createdAt" | "updatedAt"> {
+  createdAt: string;
+  updatedAt: string;
+}
+
+const parseBlogReviewsDates = (data: BlogReviewsWithStrings[]): BlogReviews[] => {
+  return data.map((item) => ({
+    ...item,
+    createdAt: new Date(item.createdAt),
+    updatedAt: new Date(item.updatedAt),
+  }));
+};
+
+export const blogReviewsColumns: ColumnDef<BlogReviews>[] = [
+  {
+    accessorKey: 'id',
+    header: ({ column }) => <GenericColumnHeader column={column} title="ID" />,
+  },
+  {
+    accessorKey: 'comment',
+    header: ({ column }) => <GenericColumnHeader column={column} title="Comment" />,
+  },
+  {
+    accessorKey: 'user',
+    header: ({ column }) => <GenericColumnHeader column={column} title="User" />,
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
+  },
+];
+
+const BlogReviewsTable = () => {
+  const { data, isLoading, error, status } = trpc.getBlogReviews.useQuery();
+
+  if (status === 'error') {
+    return <div>{error.message}</div>;
+  }
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!data && !isLoading) return <div>No Data Found</div>;
+
+  const parsedData = parseBlogReviewsDates(data!);
+
+  return <GenericTable columns={blogReviewsColumns} data={parsedData} />;
+};
+
+export default BlogReviewsTable;
