@@ -4,10 +4,10 @@ import { trpc } from '@/app/_trpc/client'
 import { Data } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
-import { GenericTable } from './GenericTable'
-import { GenericColumnHeader } from './GenericTableHeader'
+import { GenericTable } from './generic/GenericTable'
+import { GenericColumnHeader } from './generic/GenericTableHeader'
 import { Checkbox } from '../ui/checkbox'
-import { GenericTableRowActions } from './GenericTableRowActions'
+import { GenericTableRowActions } from './generic/GenericTableRowActions'
 import ViewEditDialog from '../ViewEditDialog'
 interface DataWithStrings extends Omit<Data, "createdAt" | "updatedAt"> {
   createdAt: string;

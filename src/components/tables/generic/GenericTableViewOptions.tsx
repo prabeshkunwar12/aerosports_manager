@@ -10,8 +10,8 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
+} from "../../ui/dropdown-menu"
+import { Button } from "../../ui/button"
 
 interface GenericTableViewOptionsProps<TData> {
   table: Table<TData>

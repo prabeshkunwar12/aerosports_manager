@@ -2,8 +2,8 @@
 
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
+import { Input } from "../../ui/input"
+import { Button } from "../../ui/button"
 import { GenericTableViewOptions } from "./GenericTableViewOptions"
 
 interface GenericTableToolbarProps<TData> {

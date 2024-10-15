@@ -4,8 +4,8 @@ import { trpc } from '@/app/_trpc/client'
 import { BlogReviews } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
-import { GenericTable } from './GenericTable'
-import { GenericColumnHeader } from './GenericTableHeader'
+import { GenericTable } from './generic/GenericTable'
+import { GenericColumnHeader } from './generic/GenericTableHeader'
 
 interface BlogReviewsWithStrings extends Omit<BlogReviews, "createdAt" | "updatedAt"> {
   createdAt: string;
