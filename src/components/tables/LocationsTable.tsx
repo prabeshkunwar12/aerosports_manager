@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
+import ViewEditDialog from '../ViewEditDialog'
 
 interface LocationsWithStrings extends Omit<Locations, "createdAt" | "updatedAt"> {
   createdAt: string;
@@ -28,10 +29,12 @@ export const locationsColumns: ColumnDef<Locations>[] = [
   {
     accessorKey: 'locations',
     header: ({ column }) => <GenericColumnHeader column={column} title="Locations" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'address',
     header: ({ column }) => <GenericColumnHeader column={column} title="Address" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'phone',
@@ -40,6 +43,7 @@ export const locationsColumns: ColumnDef<Locations>[] = [
   {
     accessorKey: 'map',
     header: ({ column }) => <GenericColumnHeader column={column} title="Map" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'locationid',
@@ -56,43 +60,51 @@ export const locationsColumns: ColumnDef<Locations>[] = [
   {
     accessorKey: 'desc',
     header: ({ column }) => <GenericColumnHeader column={column} title="Description" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'smallimage',
     header: ({ column }) => <GenericColumnHeader column={column} title="Small Image" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'tag',
     header: ({ column }) => <GenericColumnHeader column={column} title="Tag" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'rollerurl',
     header: ({ column }) => <GenericColumnHeader column={column} title="Roller URL" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'facebook',
     header: ({ column }) => <GenericColumnHeader column={column} title="Facebook" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'insta',
     header: ({ column }) => <GenericColumnHeader column={column} title="Instagram" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'twitter',
     header: ({ column }) => <GenericColumnHeader column={column} title="Twitter" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'tiktok',
     header: ({ column }) => <GenericColumnHeader column={column} title="Tiktok" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
-  },
+  // {
+  //   accessorKey: 'createdAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
+  // },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
+  // },
 ];
 
 const LocationsTable = () => {

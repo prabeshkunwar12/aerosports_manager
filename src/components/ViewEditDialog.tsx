@@ -9,7 +9,7 @@ const ViewEditDialog = ({value}:ViewEditDialogProps) => {
     if(!value) return null
     return (
         <Dialog>
-            <DialogTrigger>{value.length>15 ? (value.substring(0,15) + " ..."):(value)}</DialogTrigger>
+            <DialogTrigger>{value.length>15 ? (value.substring(0,15).replace(/(\r\n|\n|\r)/g, ' ') + " ..."):(value)}</DialogTrigger>
             <DialogContent>
             <DialogHeader>
                 <DialogTitle>value</DialogTitle>

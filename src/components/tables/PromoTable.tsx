@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
+import ViewEditDialog from '../ViewEditDialog'
 
 interface PromoWithStrings extends Omit<Promo, "createdAt" | "updatedAt" | "startdate" | "enddate"> {
   createdAt: string;
@@ -32,18 +33,22 @@ export const promoColumns: ColumnDef<Promo>[] = [
   {
     accessorKey: 'location',
     header: ({ column }) => <GenericColumnHeader column={column} title="Location" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'promo',
     header: ({ column }) => <GenericColumnHeader column={column} title="Promo" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'img',
     header: ({ column }) => <GenericColumnHeader column={column} title="Image" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'description',
     header: ({ column }) => <GenericColumnHeader column={column} title="Description" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'startdate',
@@ -53,14 +58,14 @@ export const promoColumns: ColumnDef<Promo>[] = [
     accessorKey: 'enddate',
     header: ({ column }) => <GenericColumnHeader column={column} title="End Date" />,
   },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
-  },
+  // {
+  //   accessorKey: 'createdAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
+  // },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
+  // },
 ];
 
 const PromoTable = () => {

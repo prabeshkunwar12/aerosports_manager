@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
+import ViewEditDialog from '../ViewEditDialog'
 
 interface FAQWithStrings extends Omit<FAQ, "createdAt" | "updatedAt"> {
   createdAt: string;
@@ -28,23 +29,26 @@ export const faqColumns: ColumnDef<FAQ>[] = [
   {
     accessorKey: 'location',
     header: ({ column }) => <GenericColumnHeader column={column} title="Location" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'question',
     header: ({ column }) => <GenericColumnHeader column={column} title="Question" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'answer',
     header: ({ column }) => <GenericColumnHeader column={column} title="Answer" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
-  },
+  // {
+  //   accessorKey: 'createdAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Created At" />,
+  // },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: ({ column }) => <GenericColumnHeader column={column} title="Updated At" />,
+  // },
 ];
 
 const FAQTable = () => {

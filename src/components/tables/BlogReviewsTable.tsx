@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
+import ViewEditDialog from '../ViewEditDialog'
 
 interface BlogReviewsWithStrings extends Omit<BlogReviews, "createdAt" | "updatedAt"> {
   createdAt: string;
@@ -28,10 +29,12 @@ export const blogReviewsColumns: ColumnDef<BlogReviews>[] = [
   {
     accessorKey: 'comment',
     header: ({ column }) => <GenericColumnHeader column={column} title="Comment" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'user',
     header: ({ column }) => <GenericColumnHeader column={column} title="User" />,
+    cell: ({ cell }) => <ViewEditDialog value={cell.getValue() as string} />
   },
   {
     accessorKey: 'createdAt',
