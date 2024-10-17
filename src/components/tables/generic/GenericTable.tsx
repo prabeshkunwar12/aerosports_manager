@@ -27,11 +27,13 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface GenericTableProps<TData, TValue> {
+  title: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function GenericTable<TData, TValue>({
+  title,
   columns,
   data,
 }: GenericTableProps<TData, TValue>) {
@@ -65,11 +67,11 @@ export function GenericTable<TData, TValue>({
 
   return (
     <MaxWidthWrapper>
-      <GenericTableToolbar table={table} />
+      <GenericTableToolbar table={table} title={title} />
       <div className="rounded-md border">
         <ScrollArea className="h-[80vh]"> {/* Set a height for the scroll area */}
           <Table>
-            <TableHeader className="">
+            <TableHeader className="sticky top-0">
                 {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (

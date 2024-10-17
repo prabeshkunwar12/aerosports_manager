@@ -78,7 +78,7 @@ const BirthdayPackagesTable = () => {
 
   const parsedData = parseBirthdayPackagesDates(data!);
 
-  return <GenericTable columns={birthdayPackagesColumns} data={parsedData} />;
+  return <GenericTable title="Birthday Packages" columns={birthdayPackagesColumns} data={parsedData} />;
 };
 
 export default BirthdayPackagesTable;

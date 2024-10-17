@@ -111,7 +111,7 @@ const BlogTable = () => {
 
   const parsedData = parseBlogDates(data!);
 
-  return <GenericTable columns={blogColumns} data={parsedData} />;
+  return <GenericTable title="Blog" columns={blogColumns} data={parsedData} />;
 };
 
 export default BlogTable;

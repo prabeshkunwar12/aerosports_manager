@@ -64,7 +64,7 @@ const FAQTable = () => {
 
   const parsedData = parseFAQDates(data!);
 
-  return <GenericTable columns={faqColumns} data={parsedData} />;
+  return <GenericTable title="FAQ" columns={faqColumns} data={parsedData} />;
 };
 
 export default FAQTable;

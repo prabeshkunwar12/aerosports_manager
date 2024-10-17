@@ -64,7 +64,7 @@ const ConfigTable = () => {
 
   const parsedData = parseConfigDates(data!);
 
-  return <GenericTable columns={configColumns} data={parsedData} />;
+  return <GenericTable title="Config" columns={configColumns} data={parsedData} />;
 };
 
 export default ConfigTable;

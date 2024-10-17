@@ -59,7 +59,7 @@ const BlogReviewsTable = () => {
 
   const parsedData = parseBlogReviewsDates(data!);
 
-  return <GenericTable columns={blogReviewsColumns} data={parsedData} />;
+  return <GenericTable title="Blog Reviews" columns={blogReviewsColumns} data={parsedData} />;
 };
 
 export default BlogReviewsTable;

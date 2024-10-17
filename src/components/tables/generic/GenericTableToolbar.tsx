@@ -7,16 +7,19 @@ import { Button } from "../../ui/button"
 import { GenericTableViewOptions } from "./GenericTableViewOptions"
 
 interface GenericTableToolbarProps<TData> {
+  title: string
   table: Table<TData>
 }
 
 export function GenericTableToolbar<TData>({
+  title,
   table,
 }: GenericTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
   return (
     <div className="flex items-center justify-between my-5">
+      <div className=" font-bold text-lg pr-32">{title}</div>
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Search..."

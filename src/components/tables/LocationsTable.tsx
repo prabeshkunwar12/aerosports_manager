@@ -120,7 +120,7 @@ const LocationsTable = () => {
 
   const parsedData = parseLocationsDates(data!);
 
-  return <GenericTable columns={locationsColumns} data={parsedData} />;
+  return <GenericTable title="Locations" columns={locationsColumns} data={parsedData} />;
 };
 
 export default LocationsTable;

@@ -220,7 +220,7 @@ const DataTable = () => {
     )
     const parsedData = parseDates(data!);
     return (
-        <GenericTable columns={columns} data={parsedData} />
+        <GenericTable title="Data" columns={columns} data={parsedData} />
     )
 }
 

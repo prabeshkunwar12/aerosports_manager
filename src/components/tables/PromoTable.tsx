@@ -81,7 +81,7 @@ const PromoTable = () => {
 
   const parsedData = parsePromoDates(data!);
 
-  return <GenericTable columns={promoColumns} data={parsedData} />;
+  return <GenericTable title="Promo" columns={promoColumns} data={parsedData} />;
 };
 
 export default PromoTable;
