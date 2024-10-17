@@ -1,5 +1,8 @@
+import { DataSchema } from '@/lib/schema';
 import { privateProcedure, router } from './trpc';
 import { getBirthdayPackagesData, getBlogData, getBlogReviewsData, getConfigData, getData, getFAQData, getLocationsData, getPromoData } from '@/lib/data/data';
+import { db } from '@/lib/db';
+import { z } from 'zod';
  
 export const appRouter = router({
 
@@ -59,6 +62,36 @@ export const appRouter = router({
         throw new Error('Failed to fetch FAQ');
     }),
 
+    //route to create data
+    createOrUpdateData: privateProcedure.input(DataSchema).mutation(async ({ input }) => {
+        const {id ,...rest} = input;
+        if(id){
+            const data = await db.data.update({
+                data: rest,
+                where:{
+                    id
+                }
+            });
+            return data;
+        }
+    
+        const data = await db.data.create({
+            data: rest,
+        });
+        return data;
+    }),
+    
+    //route to delete data
+    deleteData: privateProcedure.input(z.object({id:z.number()})).mutation(async ({input})=> {
+        const { id } = input
+    
+        const data = await db.data.delete({
+            where: {
+                id
+            }
+        })
+        return data
+    }),
 });
 
 export type AppRouter = typeof appRouter;

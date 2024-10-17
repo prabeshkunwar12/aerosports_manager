@@ -1,6 +1,7 @@
 import * as z from "zod"
 
 export const DataSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     pageid: z.string().nullable().optional(),
     isactive: z.number().nullable().optional(), // Assuming `Float` is mapped to number
@@ -31,6 +32,7 @@ export const DataSchema = z.object({
 });
 
 export const BlogSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     title: z.string().nullable().optional(),
     category: z.string().nullable().optional(),
@@ -46,11 +48,13 @@ export const BlogSchema = z.object({
 });
 
 export const BlogReviewsSchema = z.object({
+    id: z.number().optional(),
     comment: z.string().nullable().optional(),
     user: z.string().nullable().optional(),
 });
 
 export const LocationsSchema = z.object({
+    id: z.number().optional(),
     locations: z.string().nullable().optional(),
     address: z.string().nullable().optional(),
     phone: z.string().nullable().optional(),
@@ -69,12 +73,14 @@ export const LocationsSchema = z.object({
 });
 
 export const ConfigSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     key: z.string().nullable().optional(),
     value: z.string().nullable().optional(),
 });
 
 export const PromoSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     promo: z.string().nullable().optional(),
     img: z.string().nullable().optional(),
@@ -84,6 +90,7 @@ export const PromoSchema = z.object({
 });
 
 export const BirthdayPackagesSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     plantitle: z.string().nullable().optional(),
     category: z.string().nullable().optional(),
@@ -93,6 +100,7 @@ export const BirthdayPackagesSchema = z.object({
 });
 
 export const FAQSchema = z.object({
+    id: z.number().optional(),
     location: z.string().nullable().optional(),
     question: z.string().nullable().optional(),
     answer: z.string().nullable().optional(),
