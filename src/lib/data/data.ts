@@ -19,6 +19,41 @@ export const getData = async () => {
     }
 }
 
+export const getDataWithLocation = async (location?:string) => {
+    try {
+        if(!location) {
+            return await getData()
+        } 
+        const data = await db.data.findMany({
+            where: {
+                OR: [
+                    { location: { contains: location } }, // Matches if location contains the provided string
+                    { location: null } // Matches if location is an empty string
+                ]
+            }
+        }); 
+        return data;
+    } catch {
+        return null
+    }
+}
+
+export const getDataWithLocationAndPage = async ({page, location}:{page:string, location?:string}) => {
+    try {
+        const data = await getDataWithLocation(location)
+        if(!data) return null
+        const filteredData = data.filter(m => {
+            if(m.path) {
+                console.log(m.path)
+                return m.path!.toUpperCase().includes(page.toUpperCase())
+            }
+        });  
+        return filteredData;
+    } catch {
+        return null
+    }
+}
+
 // Get all data from Blog model
 export const getBlogData = async () => {
     try {
@@ -88,3 +123,5 @@ export const getFAQData = async () => {
         return null;
     }
 };
+
+
