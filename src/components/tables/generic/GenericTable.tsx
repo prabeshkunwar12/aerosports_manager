@@ -9,6 +9,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  GlobalFilterTableState,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -27,9 +28,9 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface GenericTableProps<TData, TValue> {
-  title: string;
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  title: string
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
 }
 
 export function GenericTable<TData, TValue>({
@@ -42,6 +43,8 @@ export function GenericTable<TData, TValue>({
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] =
+    React.useState<GlobalFilterTableState>();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
     data,
@@ -51,11 +54,13 @@ export function GenericTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      globalFilter
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -67,7 +72,7 @@ export function GenericTable<TData, TValue>({
 
   return (
     <MaxWidthWrapper>
-      <GenericTableToolbar table={table} title={title} />
+      <GenericTableToolbar table={table} form={title} />
       <div className="rounded-md border">
         <ScrollArea className="h-[80vh]"> {/* Set a height for the scroll area */}
           <Table>

@@ -1,46 +1,35 @@
 "use client"
 
-import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 import { Input } from "../../ui/input"
-import { Button } from "../../ui/button"
 import { GenericTableViewOptions } from "./GenericTableViewOptions"
+import GenericCreateButton from "./GenericCreateButton"
 
 interface GenericTableToolbarProps<TData> {
-  title: string
+  form: string
   table: Table<TData>
 }
 
 export function GenericTableToolbar<TData>({
-  title,
+  form,
   table,
 }: GenericTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
-
   return (
-    <div className="flex items-center justify-between my-5">
-      <div className=" font-bold text-lg pr-32">{title}</div>
-      <div className="flex flex-1 items-center space-x-2">
+    <div className="flex items-center justify-between my-6">
+      
+      <div className="flex items-center space-x-2" >
+        <GenericTableViewOptions table={table} />
         <Input
           placeholder="Search..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
+          value={table.getState().globalFilter}
+          onChange={e => table.setGlobalFilter(String(e.target.value))}
+          className="h-10 w-[180px] lg:w-[300px] pr-10 shadow-md border rounded-md"
         />
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <Cross2Icon className="ml-2 h-4 w-4" />
-          </Button>
-        )}
       </div>
-      <GenericTableViewOptions table={table} />
+    
+      <div className="font-semibold text-lg text-gray-700">{form}</div>
+
+      <GenericCreateButton form={form} />
     </div>
   )
 }
