@@ -49,7 +49,7 @@ export const BlogSchema = z.object({
 
 export const BlogReviewsSchema = z.object({
     id: z.number().optional(),
-    comment: z.string().nullable().optional(),
+    comment: z.string(),
     user: z.string().nullable().optional(),
 });
 
