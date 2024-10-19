@@ -1,5 +1,5 @@
 import { publicProcedure } from "./trpc";
-import { getBirthdayPackagesData, getBlogData, getBlogReviewsData, getConfigData, getData, getDataById, getDataWithLocation, getDataWithLocationAndPage, getFAQData, getLocationsData, getPromoData } from '@/lib/data/data';
+import { getBirthdayPackageById, getBirthdayPackagesData, getBlogById, getBlogData, getBlogReviewById, getBlogReviewsData, getConfigById, getConfigData, getData, getDataById, getDataWithLocation, getDataWithLocationAndPage, getFAQById, getFAQData, getLocationById, getLocationsData, getPromoById, getPromoData } from '@/lib/data/data';
 import * as z from 'zod'
 
 export const queries = {
@@ -27,11 +27,31 @@ export const queries = {
         throw new Error('Failed to fetch blog');
     }),
 
+    getBlogById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getBlogById(input.id);
+            if (data) return data;
+        }
+        return null;
+    }),
+
     // Route for getting data from the BlogReviews model
     getBlogReviews: publicProcedure.query(async () => {
         const data = await getBlogReviewsData();
         if (data) return data;
         throw new Error('Failed to fetch blog reviews');
+    }),
+
+    getBlogReviewsById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getBlogReviewById(input.id);
+            if (data) return data;
+        }
+        return null;
     }),
 
     // Route for getting data from the Locations model
@@ -41,11 +61,31 @@ export const queries = {
         throw new Error('Failed to fetch locations');
     }),
 
+    getLocationById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getLocationById(input.id);
+            if (data) return data;
+        }
+        return null;
+    }),
+
     // Route for getting data from the Config model
     getConfig: publicProcedure.query(async () => {
         const data = await getConfigData();
         if (data) return data;
         throw new Error('Failed to fetch config');
+    }),
+
+    getConfigById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getConfigById(input.id);
+            if (data) return data;
+        }
+        return null;
     }),
 
     // Route for getting data from the Promo model
@@ -55,6 +95,16 @@ export const queries = {
         throw new Error('Failed to fetch promo');
     }),
 
+    getPromoById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getPromoById(input.id);
+            if (data) return data;
+        }
+        return null;
+    }),
+
     // Route for getting data from the BirthdayPackages model
     getBirthdayPackages: publicProcedure.query(async () => {
         const data = await getBirthdayPackagesData();
@@ -62,11 +112,31 @@ export const queries = {
         throw new Error('Failed to fetch birthday packages');
     }),
 
+    getBirthdayPackageById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getBirthdayPackageById(input.id);
+            if (data) return data;
+        }
+        return null;
+    }),
+
     // Route for getting data from the FAQ model
     getFAQ: publicProcedure.query(async () => {
         const data = await getFAQData();
         if (data) return data;
         throw new Error('Failed to fetch FAQ');
+    }),
+
+    getFAQById: publicProcedure
+    .input(z.object({ id: z.number().optional() }))
+    .query(async ({ input }) => {
+        if(input.id) {
+            const data = await getFAQById(input.id);
+            if (data) return data;
+        }
+        return null;
     }),
 
     // Define the tRPC procedure

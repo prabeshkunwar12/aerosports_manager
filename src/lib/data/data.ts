@@ -77,6 +77,19 @@ export const getBlogData = async () => {
     }
 };
 
+export const getBlogById = async (id:number) => {
+    try {
+        const data = await db.blog.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
+
 // Get all data from BlogReviews model
 export const getBlogReviewsData = async () => {
     try {
@@ -86,6 +99,19 @@ export const getBlogReviewsData = async () => {
         return null;
     }
 };
+
+export const getBlogReviewById = async (id:number) => {
+    try {
+        const data = await db.blogReviews.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
 
 // Get all data from Locations model
 export const getLocationsData = async () => {
@@ -97,6 +123,19 @@ export const getLocationsData = async () => {
     }
 };
 
+export const getLocationById = async (id:number) => {
+    try {
+        const data = await db.locations.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
+
 // Get all data from Config model
 export const getConfigData = async () => {
     try {
@@ -107,6 +146,19 @@ export const getConfigData = async () => {
     }
 };
 
+export const getConfigById = async (id:number) => {
+    try {
+        const data = await db.config.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
+
 // Get all data from Promo model
 export const getPromoData = async () => {
     try {
@@ -116,6 +168,18 @@ export const getPromoData = async () => {
         return null;
     }
 };
+export const getPromoById = async (id:number) => {
+    try {
+        const data = await db.promo.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
 
 // Get all data from BirthdayPackages model
 export const getBirthdayPackagesData = async () => {
@@ -127,6 +191,19 @@ export const getBirthdayPackagesData = async () => {
     }
 };
 
+export const getBirthdayPackageById = async (id:number) => {
+    try {
+        const data = await db.birthdayPackages.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
+
 // Get all data from FAQ model
 export const getFAQData = async () => {
     try {
@@ -136,5 +213,18 @@ export const getFAQData = async () => {
         return null;
     }
 };
+
+export const getFAQById = async (id:number) => {
+    try {
+        const data = await db.fAQ.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
 
 
