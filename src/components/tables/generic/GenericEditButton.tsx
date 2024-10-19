@@ -26,14 +26,14 @@ const GenericEditButton = ({ form, id }: GenericEditButtonProps) => {
             </DialogTrigger>
 
             <DialogContent className='z-50 sm:w-full md:w-[1000px] w-[1000px]'>
-                {form === "data" && <DataForm id={id} />}
-                {form === "blog" && <BlogForm />}
-                {form === "blog_reviews" && <BlogReviewsForm />}
-                {form === "birthdayPackages" && <BirthdayPackagesForm />}
-                {form === "config" && <ConfigForm />}
-                {form === "faq" && <FAQForm />}
-                {form === "location" && <LocationsForm />}
-                {form === "promo" && <PromoForm />}
+                {form === "data" && <DataForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "blog" && <BlogForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "blog_reviews" && <BlogReviewsForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "birthday_packages" && <BirthdayPackagesForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "config" && <ConfigForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "faq" && <FAQForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "locations" && <LocationsForm onClose={()=>setIsOpen(false)} id={id} />}
+                {form === "promo" && <PromoForm onClose={()=>setIsOpen(false)} id={id} />}
             </DialogContent>
         </Dialog>
     )

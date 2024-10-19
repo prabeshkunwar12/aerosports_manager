@@ -28,13 +28,13 @@ const GenericCreateButton = ({ form }: GenericCreateButtonProps) => {
             <DialogContent className='z-50'>
                 <DialogTitle className='hidden'>Form</DialogTitle>
                 {form === "data" && <DataForm onClose={()=>setIsOpen(false)} />}
-                {form === "blog" && <BlogForm />}
-                {form === "blog_reviews" && <BlogReviewsForm />}
-                {form === "birthdayPackages" && <BirthdayPackagesForm />}
-                {form === "config" && <ConfigForm />}
-                {form === "faq" && <FAQForm />}
-                {form === "location" && <LocationsForm />}
-                {form === "promo" && <PromoForm />}
+                {form === "blog" && <BlogForm onClose={()=>setIsOpen(false)} />}
+                {form === "blog_reviews" && <BlogReviewsForm onClose={()=>setIsOpen(false)} />}
+                {form === "birthday_packages" && <BirthdayPackagesForm onClose={()=>setIsOpen(false)} />}
+                {form === "config" && <ConfigForm onClose={()=>setIsOpen(false)} />}
+                {form === "faq" && <FAQForm onClose={()=>setIsOpen(false)} />}
+                {form === "locations" && <LocationsForm onClose={()=>setIsOpen(false)} />}
+                {form === "promo" && <PromoForm onClose={()=>setIsOpen(false)} />}
             </DialogContent>
         </Dialog>
     )
