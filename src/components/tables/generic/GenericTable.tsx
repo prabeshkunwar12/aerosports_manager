@@ -70,9 +70,15 @@ export function GenericTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const getLastPartOfUrl = (): string => {
+    const path = window.location.pathname; // Get the full path of the URL
+    const parts = path.split('/'); // Split the path by '/'
+    return parts[parts.length - 1] || parts[parts.length - 2] || "data"; // Return the last part, or second last if last is empty
+  };
+
   return (
     <MaxWidthWrapper>
-      <GenericTableToolbar table={table} form={title} />
+      <GenericTableToolbar table={table} title={title} form={getLastPartOfUrl()} />
       <div className="rounded-md border">
         <ScrollArea className="h-[80vh]"> {/* Set a height for the scroll area */}
           <Table>

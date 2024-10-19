@@ -8,11 +8,13 @@ import GenericCreateButton from "./GenericCreateButton"
 interface GenericTableToolbarProps<TData> {
   form: string
   table: Table<TData>
+  title: string
 }
 
 export function GenericTableToolbar<TData>({
   form,
   table,
+  title,
 }: GenericTableToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between my-6">
@@ -27,7 +29,7 @@ export function GenericTableToolbar<TData>({
         />
       </div>
     
-      <div className="font-semibold text-lg text-gray-700">{form}</div>
+      <div className="font-semibold text-lg text-gray-700">{title}</div>
 
       <GenericCreateButton form={form} />
     </div>
