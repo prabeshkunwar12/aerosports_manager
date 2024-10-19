@@ -7,6 +7,7 @@ import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
 import ViewEditDialog from '../ViewEditDialog'
+import { GenericTableRowActions } from './generic/GenericTableRowActions'
 
 interface BlogReviewsWithStrings extends Omit<BlogReviews, "createdAt" | "updatedAt"> {
   createdAt: string;
@@ -22,6 +23,10 @@ const parseBlogReviewsDates = (data: BlogReviewsWithStrings[]): BlogReviews[] =>
 };
 
 export const blogReviewsColumns: ColumnDef<BlogReviews>[] = [
+  {
+		id: "actions",
+		cell: ({ row }) => <GenericTableRowActions id={row.getValue("id")} />,
+	},
   {
     accessorKey: 'id',
     header: ({ column }) => <GenericColumnHeader column={column} title="ID" />,
