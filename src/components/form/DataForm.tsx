@@ -100,7 +100,7 @@ const DataForm = ({ id, onClose }: { id?: number, onClose: ()=>void }) => {
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Data Update failed");
             console.log(error.message);
             form.reset();
         },

@@ -67,7 +67,7 @@ const BlogForm = ({ id, onClose }: { id?: number, onClose: () => void }) => {
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Blog creation failed");
             console.log(error.message);
             form.reset();
         },

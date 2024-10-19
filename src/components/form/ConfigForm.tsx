@@ -57,7 +57,7 @@ const ConfigForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Config Creation failed");
             console.log(error.message);
             form.reset();
         },

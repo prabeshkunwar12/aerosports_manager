@@ -79,7 +79,7 @@ const BirthdayPackagesForm = ({ id, onClose }: { id?: number; onClose: () => voi
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Birthday Package update failed");
             console.log(error.message);
             form.reset();
         },

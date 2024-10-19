@@ -75,7 +75,7 @@ const BlogReviewsForm = ({ id, onClose }: { id?: number, onClose: () => void }) 
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Blog review update failed");
             console.log(error.message);
             form.reset();
         },

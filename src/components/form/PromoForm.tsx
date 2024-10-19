@@ -1,5 +1,6 @@
 "use client";
-import { format } from "date-fns"
+
+import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +9,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import * as z from "zod";
-import { PromoSchema } from "@/lib/schema"; // Define schema for Promo in lib/schema
+import { PromoSchema } from "@/lib/schema"; 
 import { Promo } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { FormError, FormSuccess } from "./info";
@@ -45,8 +46,18 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
         if (data) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { createdAt, updatedAt, startdate, enddate, ...restOfTheData } = data;
-            setExistingData({ ...restOfTheData, startdate: new Date(startdate), enddate: new Date(enddate), createdAt: new Date(), updatedAt: new Date() });
-            form.reset({...restOfTheData, startdate: new Date(startdate), enddate: new Date(enddate)});
+            setExistingData({
+                ...restOfTheData,
+                startdate: new Date(startdate),
+                enddate: new Date(enddate),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+            form.reset({
+                ...restOfTheData,
+                startdate: new Date(startdate),
+                enddate: new Date(enddate),
+            });
         } else if (isError) {
             setError("Failed to fetch data.");
         }
@@ -58,14 +69,14 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
                 setSuccess("Promo successfully created");
                 utils.invalidate();
                 onClose();
-                toast("Promo successfully Created!");
+                toast("Promo successfully created!");
             } else {
-                setError("Promo Creation failed");
+                setError("Promo creation failed");
             }
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Promo creation failed");
             console.log(error.message);
             form.reset();
         },
@@ -78,22 +89,28 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
                 utils.invalidate();
                 toast("Promo successfully updated");
             } else {
-                setError("Promo Update failed");
+                setError("Promo update failed");
             }
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("Promo update failed");
             console.log(error.message);
             form.reset();
         },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onSubmit = (values:z.infer<typeof PromoSchema>, event?: React.BaseSyntheticEvent) => {
+    // Ensure the values are Date objects before submission
+    const onSubmit = (values: z.infer<typeof PromoSchema>, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
-        if (id) updatePromo({...values});
-        else createPromo({...values});
+        const startdate = new Date(values.startdate);
+        const enddate = new Date(values.enddate);
+
+        if (id) {
+            updatePromo({ ...values, startdate, enddate });
+        } else {
+            createPromo({ ...values, startdate, enddate });
+        }
     };
 
     if (isLoading) return <Skeleton className="w-[100px] h-[20px] rounded-full" />;
@@ -155,86 +172,80 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
                         )}
                     />
                     <FormField
-                      control={form.control}
-                      name="startdate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Start Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date < new Date()
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                        control={form.control}
+                        name="startdate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Start Date</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(new Date(field.value), "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            onSelect={(date) => field.onChange(date ? new Date(date) : "")}
+                                            disabled={(date) => date < new Date()}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                     <FormField
-                      control={form.control}
-                      name="enddate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>End Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date < new Date()
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                        control={form.control}
+                        name="enddate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>End Date</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(new Date(field.value), "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            onSelect={(date) => field.onChange(date ? new Date(date) : "")}
+                                            disabled={(date) => date < new Date()}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </ScrollArea>
 

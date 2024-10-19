@@ -58,7 +58,8 @@ const FAQForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
             form.reset();
         },
         onError: (error) => {
-            setError(error.message);
+            setError("FAQ creation failed");
+            console.log(error)
             form.reset();
         },
     });
