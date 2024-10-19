@@ -19,6 +19,19 @@ export const getData = async () => {
     }
 }
 
+export const getDataById = async (id:number) => {
+    try {
+        const data = await db.data.findUnique({
+            where: {
+                id
+            },
+        })
+        return data
+    } catch {
+        return null
+    }
+}
+
 export const getDataWithLocation = async (location?:string) => {
     try {
         if(!location) {

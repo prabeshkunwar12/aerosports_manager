@@ -49,7 +49,7 @@ export const columns: ColumnDef<Data>[] = [
 	},
   {
 		id: "actions",
-		cell: () => <GenericTableRowActions />,
+		cell: ({ row }) => <GenericTableRowActions id={row.getValue("id")} />,
 	},
   {
     accessorKey: 'id',

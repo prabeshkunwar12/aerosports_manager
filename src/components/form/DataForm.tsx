@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { zodResolver } from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -13,10 +12,15 @@ import { DataSchema } from "@/lib/schema";
 import { Data } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { FormError, FormSuccess } from "./info";
+import { ScrollArea } from "../ui/scroll-area";
+import { Skeleton } from "../ui/skeleton";
 
-const DataForm = ({ existingData }:{existingData:Data}) => {
+const DataForm = ({ id }: { id: number }) => {
     const [error, setError] = useState<string | undefined>();
     const [success, setSuccess] = useState<string | undefined>();
+    const [existingData, setExistingData] = useState<Data | null>(null);
+
+    const {data, isLoading, isError} = trpc.getDataById.useQuery({id})
 
     const form = useForm<z.infer<typeof DataSchema>>({
         resolver: zodResolver(DataSchema),
@@ -48,129 +52,413 @@ const DataForm = ({ existingData }:{existingData:Data}) => {
             ruleno: existingData?.ruleno ?? "",
             warnings: existingData?.warnings ?? "",
             booknowlink: existingData?.booknowlink ?? "",
-        }
+        },
     });
 
-    const { mutate:createOrUpdateData, isPending } = trpc.createOrUpdateData.useMutation({
-        onSuccess: (task) => {
-            if(task) {
-                setSuccess("Task successfully created")
+    useEffect(() => {
+        if (data) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const {createdAt, updatedAt, ...restOfTheData} = data;
+            setExistingData({...restOfTheData, createdAt:new Date(), updatedAt:new Date()}); 
+            form.reset(restOfTheData)
+        } else if (isError) {
+            setError("Failed to fetch data.");
+        }
+    }, [data, form, isError]);
+
+    const { mutate: createOrUpdateData, isPending } = trpc.createOrUpdateData.useMutation({
+        onSuccess: (data) => {
+            if (data) {
+                setSuccess("Task successfully created");
+            } else {
+                setError("Task Type Not Found");
             }
-            else setError("Task Type Not Found")
-            form.reset()
+            form.reset();
         },
         onError: (error) => {
-            setError(error.message)
-            console.log(error.message)
-            form.reset()
-        }
-    })
+            setError(error.message);
+            console.log(error.message);
+            form.reset();
+        },
+    });
 
     const onSubmit = (values: z.infer<typeof DataSchema>, event?: React.BaseSyntheticEvent) => {
-        event?.preventDefault()
-        createOrUpdateData(values)
+        event?.preventDefault();
+        createOrUpdateData(values);
     };
 
+    if(isLoading) return <Skeleton className="w-[100px] h-[20px] rounded-full" />
+
     return (
-        <Card className="mx-auto mt-20 w-[600px] max-w-7xl md:p-10 bg-white/50">
-            <CardHeader>
-                <h2 className="text-lg font-semibold">{existingData ? "Edit Data" : "Create New Data"}</h2>
-            </CardHeader>
-            <CardContent>
-                <Form {...form}>
-                    <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="space-y-4">
-                            {/* Example of multiple fields. Adjust according to your needs. */}
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-md">Title</FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                {...field} 
-                                                value={field.value ?? ""}
-                                                placeholder="Title" 
-                                                disabled={isPending} 
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+        <Form {...form}>
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+                <ScrollArea className="space-y-4 h-[70vh]">
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Title</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Title" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="metatitle"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Meta Title</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Meta Title" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="metadescription"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Meta Description</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Meta Description" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="seosection"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">SEO Section</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="SEO Section" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="location"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Location</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Location" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="pageid"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Page ID</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Page ID" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="path"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Path</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Path" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="icon"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Icon</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Icon" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="booknowurl"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Book Now URL</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now URL" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="isactive"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Is Active</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        value={field.value ?? ""}
+                                        type="number"
+                                        placeholder="1 for active, 0 for inactive"
+                                        disabled={isPending}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="desc"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Description</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Description" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="parentid"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Parent ID</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Parent ID" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="pagetype"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Page Type</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Page Type" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="video"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Video URL</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Video URL" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="smallimage"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Small Image</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Small Image" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="smalltext"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Small Text</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Small Text" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="headerimage"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Header Image</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Header Image" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="imageTitle"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Image Title</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Image Title" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="section1"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Section 1</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 1" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="sectionImage"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Section Image</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Section Image" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="section2"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Section 2</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 2" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="section2Image"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Section 2 Image</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Section 2 Image" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="Seoheader"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">SEO Header</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="SEO Header" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="ruleyes"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Rule Yes</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule Yes" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="ruleno"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Rule No</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule No" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="warnings"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Warnings</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Warnings" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="booknowlink"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-md">Book Now Link</FormLabel>
+                                <FormControl>
+                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now Link" disabled={isPending} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </ScrollArea>
 
-                            <FormField
-                                control={form.control}
-                                name="metadescription"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-md">Meta Description</FormLabel>
-                                        <FormControl>
-                                            <Textarea 
-                                                {...field} 
-                                                value={field.value ?? ""}
-                                                placeholder="Meta Description" 
-                                                disabled={isPending}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="booknowurl"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-md">Book Now URL</FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                {...field} 
-                                                value={field.value ?? ""}
-                                                placeholder="Book Now URL" 
-                                                disabled={isPending} 
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="isactive"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-md">Is Active</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                value={field.value ?? ""}
-                                                type="number"
-                                                placeholder="1 for active, 0 for inactive"
-                                                disabled={isPending}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Add more fields similar to the ones above */}
-
-                        </div>
-
-                        <FormError message={error} />
-                        <FormSuccess message={success} />
-                        <Button disabled={isPending} type="submit">
-                            {existingData ? "Update" : "Create"}
-                        </Button>
-                    </form>
-                </Form>
-            </CardContent>
-        </Card>
+                <FormError message={error} />
+                <FormSuccess message={success} />
+                <Button disabled={isPending} type="submit">
+                    {existingData ? "Update" : "Create"}
+                </Button>
+            </form>
+        </Form>
     );
 };
 

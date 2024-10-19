@@ -10,9 +10,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
+import GenericEditButton from "./GenericEditButton";
 
 
-export function GenericTableRowActions() {
+export function GenericTableRowActions({id}:{id:number}) {
+
+  const getLastPartOfUrl = (): string => {
+    const path = window.location.pathname; // Get the full path of the URL
+    const parts = path.split('/'); // Split the path by '/'
+    return parts[parts.length - 1] || parts[parts.length - 2] || "data"; // Return the last part, or second last if last is empty
+  };
 
   return (
     <DropdownMenu>
@@ -26,9 +33,9 @@ export function GenericTableRowActions() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <GenericEditButton id={id} form={getLastPartOfUrl()} />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           Delete

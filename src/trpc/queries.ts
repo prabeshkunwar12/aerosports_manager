@@ -1,5 +1,5 @@
 import { publicProcedure } from "./trpc";
-import { getBirthdayPackagesData, getBlogData, getBlogReviewsData, getConfigData, getData, getDataWithLocation, getDataWithLocationAndPage, getFAQData, getLocationsData, getPromoData } from '@/lib/data/data';
+import { getBirthdayPackagesData, getBlogData, getBlogReviewsData, getConfigData, getData, getDataById, getDataWithLocation, getDataWithLocationAndPage, getFAQData, getLocationsData, getPromoData } from '@/lib/data/data';
 import * as z from 'zod'
 
 export const queries = {
@@ -8,6 +8,13 @@ export const queries = {
         const data = await getData();
         if (data) return data;
         throw new Error('Failed to fetch data');
+    }),
+
+    getDataById: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+        const data = await getDataById(input.id);
+        if (data) return data;
     }),
 
     // Route for getting data from the Blog model
