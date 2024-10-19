@@ -5,20 +5,23 @@ import { db } from "@/lib/db";
 
 export const mutations = {
     //route to create data
-    createOrUpdateData: privateProcedure.input(DataSchema).mutation(async ({ input }) => {
-        const {id ,...rest} = input;
-        if(id){
-            const data = await db.data.update({
-                data: rest,
-                where:{
-                    id
-                }
-            });
-            return data;
-        }
-    
+    createData: privateProcedure.input(DataSchema).mutation(async ({ input }) => {
         const data = await db.data.create({
+            data:{
+                ...input,
+            },
+        });
+        return data;
+    }),
+
+    //route to update data
+    updateData: privateProcedure.input(DataSchema).mutation(async ({ input }) => {
+        const {id ,...rest} = input;
+        const data = await db.data.update({
             data: rest,
+            where:{
+                id
+            }
         });
         return data;
     }),

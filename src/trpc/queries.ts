@@ -11,10 +11,13 @@ export const queries = {
     }),
 
     getDataById: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.number().optional() }))
     .query(async ({ input }) => {
-        const data = await getDataById(input.id);
-        if (data) return data;
+        if(input.id) {
+            const data = await getDataById(input.id);
+            if (data) return data;
+        }
+        return null;
     }),
 
     // Route for getting data from the Blog model

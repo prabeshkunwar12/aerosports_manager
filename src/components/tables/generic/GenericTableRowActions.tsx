@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
 import GenericEditButton from "./GenericEditButton";
+import GenericDeleteButton from "./GenericDeleteButton";
 
 
 export function GenericTableRowActions({id}:{id:number}) {
@@ -37,8 +38,8 @@ export function GenericTableRowActions({id}:{id:number}) {
           <GenericEditButton id={id} form={getLastPartOfUrl()} />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
+        <DropdownMenuItem asChild>
+          <GenericDeleteButton id={id} form={getLastPartOfUrl()} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

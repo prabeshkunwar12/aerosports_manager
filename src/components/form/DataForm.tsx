@@ -14,13 +14,16 @@ import { trpc } from "@/app/_trpc/client";
 import { FormError, FormSuccess } from "./info";
 import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import { toast } from "sonner";
 
-const DataForm = ({ id }: { id: number }) => {
+const DataForm = ({ id, onClose }: { id?: number, onClose: ()=>void }) => {
     const [error, setError] = useState<string | undefined>();
     const [success, setSuccess] = useState<string | undefined>();
     const [existingData, setExistingData] = useState<Data | null>(null);
 
     const {data, isLoading, isError} = trpc.getDataById.useQuery({id})
+
+    const utils = trpc.useUtils()
 
     const form = useForm<z.infer<typeof DataSchema>>({
         resolver: zodResolver(DataSchema),
@@ -66,12 +69,33 @@ const DataForm = ({ id }: { id: number }) => {
         }
     }, [data, form, isError]);
 
-    const { mutate: createOrUpdateData, isPending } = trpc.createOrUpdateData.useMutation({
+    const { mutate: createData, isPending:creationPending } = trpc.createData.useMutation({
         onSuccess: (data) => {
             if (data) {
-                setSuccess("Task successfully created");
+                setSuccess("Data successfully created");
+                utils.invalidate()
+                onClose()
+                toast("Data successfully Created!")
             } else {
-                setError("Task Type Not Found");
+                setError("Data Creation failed");
+            }
+            form.reset();
+        },
+        onError: (error) => {
+            setError(error.message);
+            console.log(error.message);
+            form.reset();
+        },
+    });
+
+    const { mutate: updateData, isPending:updatePending } = trpc.updateData.useMutation({
+        onSuccess: (data) => {
+            if (data) {
+                setSuccess("Data successfully updated");
+                utils.invalidate()
+                toast("Data successfully updated")
+            } else {
+                setError("Data Update failed");
             }
             form.reset();
         },
@@ -84,7 +108,8 @@ const DataForm = ({ id }: { id: number }) => {
 
     const onSubmit = (values: z.infer<typeof DataSchema>, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
-        createOrUpdateData(values);
+        if(id) updateData(values) 
+        else createData(values);
     };
 
     if(isLoading) return <Skeleton className="w-[100px] h-[20px] rounded-full" />
@@ -100,7 +125,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Title</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Title" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Title" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -113,7 +138,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Meta Title</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Meta Title" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Meta Title" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -126,7 +151,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Meta Description</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Meta Description" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Meta Description" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -139,7 +164,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">SEO Section</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="SEO Section" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="SEO Section" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -152,7 +177,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Location</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Location" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Location" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -165,7 +190,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Page ID</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Page ID" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Page ID" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -178,7 +203,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Path</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Path" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Path" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -191,7 +216,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Icon</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Icon" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Icon" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -204,7 +229,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Book Now URL</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now URL" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now URL" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -222,7 +247,7 @@ const DataForm = ({ id }: { id: number }) => {
                                         value={field.value ?? ""}
                                         type="number"
                                         placeholder="1 for active, 0 for inactive"
-                                        disabled={isPending}
+                                        disabled={creationPending || updatePending}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -236,7 +261,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Description</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Description" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Description" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -249,7 +274,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Parent ID</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Parent ID" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Parent ID" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -262,7 +287,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Page Type</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Page Type" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Page Type" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -275,7 +300,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Video URL</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Video URL" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Video URL" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -288,7 +313,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Small Image</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Small Image" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Small Image" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -301,7 +326,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Small Text</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Small Text" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Small Text" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -314,7 +339,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Header Image</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Header Image" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Header Image" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -327,7 +352,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Image Title</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Image Title" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Image Title" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -340,7 +365,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Section 1</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 1" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 1" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -353,7 +378,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Section Image</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Section Image" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Section Image" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -366,7 +391,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Section 2</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 2" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Section 2" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -379,7 +404,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Section 2 Image</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Section 2 Image" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Section 2 Image" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -392,7 +417,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">SEO Header</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="SEO Header" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="SEO Header" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -405,7 +430,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Rule Yes</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule Yes" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule Yes" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -418,7 +443,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Rule No</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule No" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Rule No" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -431,7 +456,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Warnings</FormLabel>
                                 <FormControl>
-                                    <Textarea {...field} value={field.value ?? ""} placeholder="Warnings" disabled={isPending} />
+                                    <Textarea {...field} value={field.value ?? ""} placeholder="Warnings" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -444,7 +469,7 @@ const DataForm = ({ id }: { id: number }) => {
                             <FormItem>
                                 <FormLabel className="text-md">Book Now Link</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now Link" disabled={isPending} />
+                                    <Input {...field} value={field.value ?? ""} placeholder="Book Now Link" disabled={creationPending || updatePending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -454,7 +479,7 @@ const DataForm = ({ id }: { id: number }) => {
 
                 <FormError message={error} />
                 <FormSuccess message={success} />
-                <Button disabled={isPending} type="submit">
+                <Button disabled={creationPending || updatePending} type="submit">
                     {existingData ? "Update" : "Create"}
                 </Button>
             </form>

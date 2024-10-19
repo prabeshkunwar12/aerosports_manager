@@ -6,9 +6,9 @@ import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 import { GenericTable } from './generic/GenericTable'
 import { GenericColumnHeader } from './generic/GenericTableHeader'
-import { Checkbox } from '../ui/checkbox'
 import { GenericTableRowActions } from './generic/GenericTableRowActions'
 import ViewEditDialog from '../ViewEditDialog'
+import { Skeleton } from '../ui/skeleton'
 interface DataWithStrings extends Omit<Data, "createdAt" | "updatedAt"> {
   createdAt: string;
   updatedAt: string;
@@ -23,30 +23,30 @@ const parseDates = (data: DataWithStrings[]): Data[] => {
 };
 
 export const columns: ColumnDef<Data>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-		<Checkbox
-			checked={
-				table.getIsAllPageRowsSelected() ||
-				(table.getIsSomePageRowsSelected() && "indeterminate")
-			}
-			onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-			aria-label="Select all"
-			className="translate-y-[2px]"
-		/>
-		),
-		cell: ({ row }) => (
-		<Checkbox
-			checked={row.getIsSelected()}
-			onCheckedChange={(value) => row.toggleSelected(!!value)}
-			aria-label="Select row"
-			className="translate-y-[2px]"
-		/>
-		),
-		enableSorting: false,
-		enableHiding: false,
-	},
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+	// 	<Checkbox
+	// 		checked={
+	// 			table.getIsAllPageRowsSelected() ||
+	// 			(table.getIsSomePageRowsSelected() && "indeterminate")
+	// 		}
+	// 		onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+	// 		aria-label="Select all"
+	// 		className="translate-y-[2px]"
+	// 	/>
+	// 	),
+	// 	cell: ({ row }) => (
+	// 	<Checkbox
+	// 		checked={row.getIsSelected()}
+	// 		onCheckedChange={(value) => row.toggleSelected(!!value)}
+	// 		aria-label="Select row"
+	// 		className="translate-y-[2px]"
+	// 	/>
+	// 	),
+	// 	enableSorting: false,
+	// 	enableHiding: false,
+	// },
   {
 		id: "actions",
 		cell: ({ row }) => <GenericTableRowActions id={row.getValue("id")} />,
@@ -202,18 +202,16 @@ export const columns: ColumnDef<Data>[] = [
 ];
   
 const DataTable = () => {
-    const { data, isLoading, error, status } = trpc.getData.useQuery();
+    const { data, isLoading, status } = trpc.getData.useQuery();
     if(status==='error'){
         <div>
-            {error.message}
+            Server Error! Please refresh the page!
         </div>
     } 
     if(isLoading) return (
-        <div>
-            loading...
-        </div>
+        <Skeleton />
     )
-    if(!data &&!isLoading) return(
+    if(!data && !isLoading) return(
         <div>
             No Data Found;
         </div>

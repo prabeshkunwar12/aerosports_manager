@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata = {
   title: "Create Next App",
@@ -22,6 +23,7 @@ export default function RootLayout({
 							{children}
 						</Providers>
 					</div>
+          <Toaster />
 				</main>
 			</body>
     </html>
