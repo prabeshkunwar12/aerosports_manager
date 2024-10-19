@@ -84,6 +84,7 @@ export const getBlogById = async (id:number) => {
                 id
             },
         })
+        console.log(data)
         return data
     } catch {
         return null
