@@ -85,8 +85,8 @@ export const PromoSchema = z.object({
     promo: z.string().nullable().optional(),
     img: z.string().nullable().optional(),
     description: z.string().nullable().optional(),
-    startdate: z.date().optional(),
-    enddate: z.date().optional(),
+    startdate: z.string().optional(),
+    enddate: z.string().optional(),
 });
 
 export const BirthdayPackagesSchema = z.object({

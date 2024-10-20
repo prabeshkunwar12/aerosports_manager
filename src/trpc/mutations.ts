@@ -169,11 +169,11 @@ export const mutations = {
 
     //Promo
     createPromo: privateProcedure.input(PromoSchema).mutation(async ({ input }) => {
-        // const {startdate,enddate,...rest} = input;
-        // const modifiedInput = {...rest, startdate:new Date(startdate), enddate:new Date(enddate)}
+        const {startdate,enddate,...rest} = input;
+        const modifiedInput = {...rest, startdate:new Date(startdate??''), enddate:new Date(enddate??'')}
         const data = await db.promo.create({
             data:{
-                ...input
+                ...modifiedInput
             },
         });
         return data;
@@ -181,7 +181,7 @@ export const mutations = {
 
     updatePromo: privateProcedure.input(PromoSchema).mutation(async ({ input }) => {
         const {id,startdate,enddate,...rest} = input;
-        const modifiedInput = {...rest, startdate:new Date(startdate), enddate:new Date(enddate)}
+        const modifiedInput = {...rest, startdate:new Date(startdate??''), enddate:new Date(enddate??'')}
         const data = await db.promo.update({
             data: {...modifiedInput},
             where:{

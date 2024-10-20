@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,10 +15,6 @@ import { FormError, FormSuccess } from "./info";
 import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { Calendar } from "../ui/calendar";
-import { cn } from "@/lib/utils";
 
 const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
     const [error, setError] = useState<string | undefined>();
@@ -37,8 +32,8 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
             promo: existingData?.promo ?? "",
             img: existingData?.img ?? "",
             description: existingData?.description ?? "",
-            startdate: existingData?.startdate ?? new Date(),
-            enddate: existingData?.enddate ?? new Date(),
+            startdate: new Date(existingData?.startdate ?? new Date()).toISOString().split('T')[0],
+            enddate: new Date(existingData?.enddate ?? new Date()).toISOString().split('T')[0],
         },
     });
 
@@ -55,8 +50,8 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
             });
             form.reset({
                 ...restOfTheData,
-                startdate: new Date(startdate),
-                enddate: new Date(enddate),
+                startdate: new Date(startdate ?? new Date()).toISOString().split('T')[0],
+                enddate: new Date(enddate ?? new Date()).toISOString().split('T')[0],
             });
         } else if (isError) {
             setError("Failed to fetch data.");
@@ -103,13 +98,16 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
     // Ensure the values are Date objects before submission
     const onSubmit = (values: z.infer<typeof PromoSchema>, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
-        const startdate = new Date(values.startdate);
-        const enddate = new Date(values.enddate);
-
+        values.startdate = new Date(
+            new Date(values?.startdate ?? new Date()).getTime() - new Date().getTimezoneOffset() * 60000
+        ).toISOString();
+        values.enddate = new Date(
+            new Date(values?.enddate ?? new Date()).getTime() - new Date().getTimezoneOffset() * 60000
+        ).toISOString();
         if (id) {
-            updatePromo({ ...values, startdate, enddate });
+            updatePromo({ ...values });
         } else {
-            createPromo({ ...values, startdate, enddate });
+            createPromo({ ...values });
         }
     };
 
@@ -177,34 +175,7 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Start Date</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(new Date(field.value), "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            onSelect={(date) => field.onChange(date ? new Date(date) : "")}
-                                            disabled={(date) => date < new Date()}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <Input {...field} type="date" placeholder="Start date" disabled={creationPending || updatePending} />
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -215,34 +186,7 @@ const PromoForm = ({ id, onClose }: { id?: number; onClose: () => void }) => {
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>End Date</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(new Date(field.value), "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            onSelect={(date) => field.onChange(date ? new Date(date) : "")}
-                                            disabled={(date) => date < new Date()}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <Input {...field} type="date" placeholder="End date" disabled={creationPending || updatePending} />
                                 <FormMessage />
                             </FormItem>
                         )}
